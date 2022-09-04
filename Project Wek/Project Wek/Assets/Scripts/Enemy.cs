@@ -8,13 +8,29 @@ public class Enemy : MonoBehaviour
     public float currentHP = 10;
     public float maxHP = 10;
     public float movementSpeed;
-
+    public int attack;
     GameObject player;
+
 
     void Start()
     {
         player = GameObject.Find("Player");
         Physics2D.IgnoreCollision(player.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
+    }
+
+    public void GetHit(int dmg)
+    {
+        GetComponent<SimpleFlash>().Flash();
+        currentHP -= dmg;
+
+        if (currentHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die() {
+        Destroy(gameObject);
     }
 
     private void FixedUpdate()
@@ -29,4 +45,5 @@ public class Enemy : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 180, 0);
         }
     }
+
 }
