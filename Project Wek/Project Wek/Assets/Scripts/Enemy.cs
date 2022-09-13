@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class Enemy : MonoBehaviour
     private bool onCooldown;
     private float timeLimit = 0.5f;
     private float timer = 0;
+    public int exp = 1;
 
     void Start()
     {
@@ -49,10 +51,15 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Break()
     {
+        moving = false;
         particle.Play();
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
         gameObject.GetComponent<Collider2D>().enabled = false;
         shadow.SetActive(false);
+
+        player.GetComponent<Player>().Heal(player.GetComponent<Player>().lifesteal);
+        player.GetComponent<Player>().GetEXP(exp);
+
         yield return new WaitForSeconds(particle.main.startLifetime.constantMax);
         Destroy(gameObject);
     }
@@ -78,7 +85,7 @@ public class Enemy : MonoBehaviour
         {
             float step = movementSpeed * Time.fixedDeltaTime;
             transform.position = Vector2.MoveTowards(transform.position, player.transform.position, step);
-
+            
             if (gameObject.transform.position.x > player.transform.position.x)
             {
                 transform.rotation = Quaternion.Euler(0, 0, 0);

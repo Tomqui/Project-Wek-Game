@@ -23,15 +23,29 @@ public class Projectile : MonoBehaviour
     int direction;
 
     public GameObject preDamagePopup;
+    Player player;
+
+    [SerializeField] bool isCube;
+    [SerializeField] bool isFish;
 
     private void Start()
     {
+        
+        player = GameObject.Find("Player").GetComponent<Player>();
         rb = GetComponent<Rigidbody2D>();
         if (transform.rotation.eulerAngles.y == 180) {    
             direction = -1;
         }
         else{
             direction = 1;
+        }
+        if (isFish)
+        {
+            SetStats(player.fishAttack, 10f, player.fishKB);
+        }
+        if (isCube)
+        {
+            SetStats(player.iceCount, 0f, player.iceKB);
         }
     }
 
@@ -69,9 +83,19 @@ public class Projectile : MonoBehaviour
             dmgpop.GetComponentInChildren<DamagePopup>().SetText(attack);
 
             Rigidbody2D enemy = other.GetComponent<Rigidbody2D>();
+
             try{
+                Vector2 dif;
                 enemy.isKinematic = false;
-                Vector2 dif = enemy.transform.position - transform.position;
+                if (Laser)
+                {
+                    dif = enemy.transform.position - player.transform.position;
+                }
+                else
+                {
+                    dif = enemy.transform.position - transform.position;
+                }
+                
                 dif = dif.normalized * thrust;
                 enemy.AddForce(dif,ForceMode2D.Impulse);
                 StartCoroutine(KnockCo(enemy));

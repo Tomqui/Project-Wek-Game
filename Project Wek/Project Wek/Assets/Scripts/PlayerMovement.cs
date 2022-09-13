@@ -10,7 +10,10 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 movement;
     
-    
+    public void IncreaseMove(float move)
+    {
+        moveSpeed += move;
+    }
 
     void Update()
     {

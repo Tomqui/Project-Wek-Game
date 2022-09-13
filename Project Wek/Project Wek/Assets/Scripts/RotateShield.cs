@@ -6,6 +6,10 @@ public class RotateShield : MonoBehaviour
 {
     public float rotateSpeed = 0.0f;
     public Projectile p1;
+    public Projectile p2;
+    public Projectile p3;
+    public Projectile p4;
+
 
     GameObject player;
 
@@ -26,6 +30,18 @@ public class RotateShield : MonoBehaviour
     private void LateUpdate()
     {
         p1.transform.eulerAngles = new Vector3(
+            p1.transform.eulerAngles.x,
+            p1.transform.eulerAngles.y,
+            -gameObject.transform.rotation.z);
+        p2.transform.eulerAngles = new Vector3(
+            p1.transform.eulerAngles.x,
+            p1.transform.eulerAngles.y,
+            -gameObject.transform.rotation.z);
+        p3.transform.eulerAngles = new Vector3(
+            p1.transform.eulerAngles.x,
+            p1.transform.eulerAngles.y,
+            -gameObject.transform.rotation.z);
+        p4.transform.eulerAngles = new Vector3(
             p1.transform.eulerAngles.x,
             p1.transform.eulerAngles.y,
             -gameObject.transform.rotation.z);
