@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     public GameObject shadow;
 
     private bool moving;
-    private bool onCooldown;
+    private bool touchCooldown;
     private float timeLimit = 0.5f;
     private float timer = 0;
     public int exp = 1;
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         moving = true;
-        onCooldown = false;
+        touchCooldown = false;
         timer = 0;
         
         player = GameObject.Find("Player");
@@ -68,9 +68,9 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (!onCooldown)
+            if (!touchCooldown)
             {
-                onCooldown = true;
+                touchCooldown = true;
                 timer = 0;
                 collision.gameObject.GetComponent<Player>().GetHit(attack);
                 
@@ -96,12 +96,12 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (onCooldown)
+        if (touchCooldown)
         {
             timer += Time.fixedDeltaTime;
             if (timer >= timeLimit)
             {
-                onCooldown = false;
+                touchCooldown = false;
                 moving = true;
             }
         }

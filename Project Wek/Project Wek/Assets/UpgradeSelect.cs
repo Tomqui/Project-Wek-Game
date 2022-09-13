@@ -35,7 +35,7 @@ public class UpgradeSelect : MonoBehaviour
     private int GetChoice(int choice1 = 0,int choice2 = 0)
     {
         bool acceptable = false;
-        int upperRange = 8;
+        int upperRange = 11;
         int num = Random.Range(1,upperRange);
         while (acceptable)
         {

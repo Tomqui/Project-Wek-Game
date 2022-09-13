@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     public float iceKB;
     public float iceSpeed;
     public int lifesteal;
+    public int level;
 
     [SerializeField] int EXP;
     [SerializeField] int requiredEXP;
@@ -37,6 +38,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] GameObject LevelUpBox;
 
+    [SerializeField] GameObject preDamagePopup;
+
     private void SetUp() {
         currentHP = 25;
         maxHP = 25;
@@ -54,7 +57,7 @@ public class Player : MonoBehaviour
         attackCooldown = 1;
 
         lifesteal = 0;
-        playerMove.moveSpeed = 25.0f;
+        playerMove.moveSpeed = 2;
     }
 
     private void Start()
@@ -105,6 +108,7 @@ public class Player : MonoBehaviour
     {
         GetComponent<SimpleFlash>().Flash();
         currentHP -= dmg;
+
         if (currentHP <= 0)
         {
             Die();
@@ -112,21 +116,30 @@ public class Player : MonoBehaviour
         hpSlide.maxValue = maxHP;
         hpSlide.value = currentHP;
         hpText.text = "HP: " + currentHP + "/" + maxHP;
+
+        GameObject dmgpop = Instantiate(preDamagePopup, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+        dmgpop.GetComponentInChildren<DamagePopup>().SetText(dmg);
+        dmgpop.GetComponentInChildren<DamagePopup>().SetColor(Color.red);
     }
 
     public void Heal(int hp)
     {
-        if(currentHP + hp > maxHP)
+        if(currentHP + hp > maxHP || hp == 0)
         {
-  
+        
         }
         else
         {
             currentHP += hp;
+            GameObject dmgpop = Instantiate(preDamagePopup, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
+            dmgpop.GetComponentInChildren<DamagePopup>().SetText(hp);
+            dmgpop.GetComponentInChildren<DamagePopup>().SetColor(Color.green);
         }
         hpSlide.maxValue = maxHP;
         hpSlide.value = currentHP;
         hpText.text = "HP: " + currentHP + "/" + maxHP;
+
+        
     }
 
     public void GetEXP(int e)

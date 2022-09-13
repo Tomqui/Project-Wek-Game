@@ -17,4 +17,9 @@ public class DamagePopup : MonoBehaviour
     {
         gameObject.GetComponent<TextMeshPro>().text = ""+dmg;
     }
+
+    public void SetColor(Color color)
+    {
+        gameObject.GetComponent<TextMeshPro>().color = color;
+    }
 }

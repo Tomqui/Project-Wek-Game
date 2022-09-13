@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
 
     int direction;
 
-    public GameObject preDamagePopup;
+    [SerializeField] GameObject preDamagePopup;
     Player player;
 
     [SerializeField] bool isCube;

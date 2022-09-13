@@ -117,6 +117,7 @@ public class UpgradeBox : MonoBehaviour
             case 10:
                 player.maxHP += 25;
                 player.currentHP += 25;
+                player.Heal(0);
                 break;
         }
         LevelUpContainer.SetActive(false);
