@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6515581430195458583}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.367, y: -0.007, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -2.306, y: 0.054, z: 1}
+  m_LocalScale: {x: 1.3813, y: 1.3813, z: 1.3813}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d657b24276640f94986aa9353d04813b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -100,7 +100,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0.036629356, y: -0.052195273}
   serializedVersion: 2
-  m_Radius: 0.0718761
+  m_Radius: 0.08984144
 --- !u!50 &6515581430195458578
 Rigidbody2D:
   serializedVersion: 4
@@ -139,4 +139,6 @@ MonoBehaviour:
   thrust: 2.5
   knockTime: 0.5
   attack: 1
+  expires: 1
+  Laser: 0
   preDamagePopup: {fileID: 2416641826967610285, guid: 0ba0162d9ba13d04188fd70f51999ad6, type: 3}

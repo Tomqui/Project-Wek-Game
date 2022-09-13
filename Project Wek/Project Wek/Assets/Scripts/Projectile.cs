@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     public float moveSpeed = 10.0f;
 
     public float timer = 0.0f;
+    
     const float expiry = 10.0f;
 
     public float thrust = 1.0f;
@@ -15,7 +16,8 @@ public class Projectile : MonoBehaviour
     public int attack = 1;
 
     Rigidbody2D rb;
-    bool Laser;
+    public bool expires = true;
+    public bool Laser = false;
     bool isHit;
 
     int direction;
@@ -42,14 +44,20 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-        rb.MovePosition(rb.position + new Vector2(direction,0) * moveSpeed * Time.fixedDeltaTime);
-
-        timer += Time.fixedDeltaTime;
-        if (timer > expiry)
+        if(moveSpeed > 0)
         {
-            Destroy(gameObject);
+            rb.MovePosition(rb.position + new Vector2(direction, 0) * moveSpeed * Time.fixedDeltaTime);
         }
+
+        if (expires)
+        {
+            timer += Time.fixedDeltaTime;
+            if (timer > expiry)
+            {
+                Destroy(gameObject);
+            }
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -85,8 +93,12 @@ public class Projectile : MonoBehaviour
         if (enemy != null)
         {
             yield return new WaitForSeconds(knockTime);
-            enemy.velocity = Vector2.zero;
-            enemy.isKinematic = true;
+            if(enemy!= null)
+            {
+                enemy.velocity = Vector2.zero;
+                enemy.isKinematic = true;
+            }
+            
         }
             
     }
