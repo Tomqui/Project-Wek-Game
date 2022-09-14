@@ -93,7 +93,7 @@ public class Projectile : MonoBehaviour
                 }
                 else
                 {
-                    dif = enemy.transform.position - transform.position;
+                    dif = enemy.transform.position - player.transform.position;
                 }
                 
                 dif = dif.normalized * thrust;

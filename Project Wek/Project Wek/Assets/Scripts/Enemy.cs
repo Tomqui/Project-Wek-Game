@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,13 +23,26 @@ public class Enemy : MonoBehaviour
     private float timer = 0;
     public int exp = 1;
 
+    private Rigidbody2D rb;
+
+    //fronfish
+    [SerializeField] bool isFish;
+    private bool chargeCD;
+    private float chargeTime;
+    private float chargeTimeLimit;
+    private int chargeDMG;
+    private int chargeSpeed;
+
     void Start()
     {
         moving = true;
         touchCooldown = false;
         timer = 0;
-        
+
+        chargeSpeed = 100;
+
         player = GameObject.Find("Player");
+        rb = GetComponent<Rigidbody2D>();
         //Physics2D.IgnoreCollision(player.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
         particle = GetComponentInChildren<ParticleSystem>();
         
@@ -66,6 +80,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        //touch damage
         if (collision.gameObject.CompareTag("Player"))
         {
             if (!touchCooldown)
@@ -74,13 +89,33 @@ public class Enemy : MonoBehaviour
                 timer = 0;
                 collision.gameObject.GetComponent<Player>().GetHit(attack);
                 
-                
             }
         }
     }
 
+    private IEnumerator Charge()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Vector2 dif = transform.position - player.transform.position;
+        dif = dif.normalized * chargeSpeed;
+        rb.AddForce(dif, ForceMode2D.Impulse);
+       
+        
+    }
+
     private void FixedUpdate()
     {
+        if (Vector2.Distance(transform.position,player.transform.position) <= 2)
+        {
+            if (chargeCD)
+            {
+                chargeCD = true;
+                moving = false;
+                StartCoroutine(Charge());
+            }
+            
+        }
+
         if (moving)
         {
             float step = movementSpeed * Time.fixedDeltaTime;

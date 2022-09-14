@@ -32,7 +32,7 @@ public class EnemySystem : MonoBehaviour
     {
         totalTimer += Time.deltaTime;
         fishTimer += Time.deltaTime;
-        if (fishTimer >= 5f)
+        if (fishTimer >= 1f)
         {
             SpawnEnemy();
             fishTimer = 0.0f;
