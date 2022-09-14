@@ -31,21 +31,29 @@ public class Enemy : MonoBehaviour
     private float chargeTime;
     private float chargeTimeLimit;
     private int chargeDMG;
-    private int chargeSpeed;
+    private float chargeSpeed;
+
+    float xVariance;
+    float yVariance;
 
     void Start()
     {
         moving = true;
         touchCooldown = false;
+        chargeCD = false;
         timer = 0;
 
-        chargeSpeed = 100;
+        chargeSpeed = 10f;
+        chargeTime = 0f;
+        chargeTimeLimit = 5f;
 
         player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody2D>();
         //Physics2D.IgnoreCollision(player.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
         particle = GetComponentInChildren<ParticleSystem>();
-        
+
+        xVariance = Random.Range(-0.5f, 0.5f);
+        yVariance = Random.Range(-0.5f, 0.5f);
     }
 
     public void GetHit(int dmg)
@@ -95,19 +103,23 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Charge()
     {
-        yield return new WaitForSeconds(1.0f);
-        Vector2 dif = transform.position - player.transform.position;
+        
+        Vector2 dif = player.transform.position-transform.position;
+        yield return new WaitForSeconds(1f);
         dif = dif.normalized * chargeSpeed;
         rb.AddForce(dif, ForceMode2D.Impulse);
-       
+        yield return new WaitForSeconds(0.75f);
+        rb.velocity = Vector2.zero;
+
+        moving = true;
         
     }
 
     private void FixedUpdate()
     {
-        if (Vector2.Distance(transform.position,player.transform.position) <= 2)
+        if (Vector2.Distance(transform.position,player.transform.position) <= 4)
         {
-            if (chargeCD)
+            if (!chargeCD)
             {
                 chargeCD = true;
                 moving = false;
@@ -119,7 +131,8 @@ public class Enemy : MonoBehaviour
         if (moving)
         {
             float step = movementSpeed * Time.fixedDeltaTime;
-            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, step);
+            Vector3 variance = new Vector3(xVariance,yVariance,0);   
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position+variance, step);
             
             if (gameObject.transform.position.x > player.transform.position.x)
             {
@@ -138,6 +151,17 @@ public class Enemy : MonoBehaviour
             {
                 touchCooldown = false;
                 moving = true;
+                timer = 0;
+            }
+        }
+
+        if (chargeCD)
+        {
+            chargeTime += Time.fixedDeltaTime;
+            if (chargeTime >= chargeTimeLimit)
+            {
+                chargeCD = false;
+                chargeTime = 0;
             }
         }
 

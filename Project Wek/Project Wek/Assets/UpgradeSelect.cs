@@ -32,19 +32,19 @@ public class UpgradeSelect : MonoBehaviour
         box3.SetUp(choice3);
     }
 
-    private int GetChoice(int choice1 = 0,int choice2 = 0)
+    private int GetChoice(int c1 = 0,int c2 = 0)
     {
         bool acceptable = false;
         int upperRange = 11;
         int num = Random.Range(1,upperRange);
         while (acceptable)
         {
-            if(num == choice1)
+            if(num == c1)
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);
             }
-            else if (num == choice2)
+            else if (num == c2)
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);

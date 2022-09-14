@@ -140,7 +140,7 @@ MonoBehaviour:
   knockTime: 0.5
   attack: 1
   expires: 1
-  Laser: 0
+  Laser: 1
   preDamagePopup: {fileID: 2416641826967610285, guid: 0ba0162d9ba13d04188fd70f51999ad6, type: 3}
   isCube: 0
   isFish: 1

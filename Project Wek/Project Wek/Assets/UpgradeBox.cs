@@ -19,6 +19,7 @@ public class UpgradeBox : MonoBehaviour
     [SerializeField] private Sprite fish;
     [SerializeField] private Sprite wek;
 
+
     private void Start()
     {
        

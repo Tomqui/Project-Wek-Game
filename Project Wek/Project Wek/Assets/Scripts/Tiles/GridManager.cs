@@ -26,7 +26,7 @@ public class GridManager : MonoBehaviour
                     var spawnedWall = Instantiate(tile, new Vector3(x, y, 5), Quaternion.identity, gameObject.transform);
                     spawnedWall.name = $"Wall {x} {y}";
                 }
-                else if ( ((y==wallPadding) && (x>=wallPadding && x<=width-wallPadding-1)) || ((y == height-wallPadding) && (x >= wallPadding && x <= width - wallPadding-1))) 
+                else if ( ((y==wallPadding) && (x>=wallPadding && x<=width-wallPadding)) || ((y == height-wallPadding) && (x >= wallPadding && x <= width - wallPadding))) 
                 {
                     tile= wall1;
                     var spawnedWall = Instantiate(tile, new Vector3(x, y, 5), Quaternion.identity, gameObject.transform);

@@ -39,12 +39,14 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject LevelUpBox;
 
     [SerializeField] GameObject preDamagePopup;
-
+    [SerializeField] TextMeshProUGUI KillCounter;
+    int killCount;
     private void SetUp() {
         currentHP = 25;
         maxHP = 25;
         EXP = 0;
         requiredEXP = 15;
+        killCount = 0;
 
         iceCount = 1;
         iceAttack = 1;
@@ -153,6 +155,8 @@ public class Player : MonoBehaviour
         expSlide.maxValue = requiredEXP;
         expSlide.value = EXP;
 
+        killCount++;
+        KillCounter.text = killCount+"";
     }
 
     public void LevelUp()
