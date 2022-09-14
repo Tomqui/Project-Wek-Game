@@ -173,16 +173,19 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
+        float xPad = 0.5f;
         float projRotate = 0;
         if (transform.rotation.y%180==0){
             projRotate = 180;
-
+            xPad *= -1;
         }
         else
         {
             projRotate = 0;
+            
         }
-        GameObject fish = Instantiate(prefabAttack, new Vector3(transform.position.x,transform.position.y,transform.position.z), Quaternion.Euler(transform.rotation.x,projRotate,transform.rotation.z));
+
+        GameObject fish = Instantiate(prefabAttack, new Vector3(transform.position.x+xPad,transform.position.y,transform.position.z), Quaternion.Euler(transform.rotation.x,projRotate,transform.rotation.z));
         fish.GetComponent<Projectile>().SetStats(fishAttack, 10f, fishKB);
     }
 
