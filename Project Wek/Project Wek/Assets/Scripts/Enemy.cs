@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
@@ -25,7 +26,7 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    //fronfish
+    //frontfish
     [SerializeField] bool isFish;
     private bool chargeCD;
     private float chargeTime;
@@ -33,8 +34,29 @@ public class Enemy : MonoBehaviour
     private int chargeDMG;
     private float chargeSpeed;
 
+    //sand
+    [SerializeField] bool isSand;
+    private bool bombCD;
+    private float bombTime;
+    private float bombTimeLimit;
+    private int bombDMG;
+
+    //laser
+    [SerializeField] bool isYMDN;
+    private bool laserCD;
+    private float laserTime;
+    private float lasterTimeLimit;
+    private int laserDMG;
+
+    public bool dead;
+
     float xVariance;
     float yVariance;
+
+
+    [SerializeField] SimpleFlash hitFlash;
+    [SerializeField] SimpleFlash atkFlash;
+
 
     void Start()
     {
@@ -56,9 +78,16 @@ public class Enemy : MonoBehaviour
         yVariance = Random.Range(-0.5f, 0.5f);
     }
 
+    public void SetUpFish(int atk,int hp)
+    {
+        attack = atk;
+        maxHP = hp;
+        currentHP = hp;
+    }
+
     public void GetHit(int dmg)
     {
-        GetComponent<SimpleFlash>().Flash();
+        hitFlash.Flash();
         currentHP -= dmg;
 
         if (currentHP <= 0)
@@ -78,9 +107,12 @@ public class Enemy : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
         gameObject.GetComponent<Collider2D>().enabled = false;
         shadow.SetActive(false);
+        dead = true;
+        rb.velocity = Vector2.zero;
 
         player.GetComponent<Player>().Heal(player.GetComponent<Player>().lifesteal);
         player.GetComponent<Player>().GetEXP(exp);
+        GameObject.Find("Enemies").GetComponent<EnemySystem>().enemyCount--;
 
         yield return new WaitForSeconds(particle.main.startLifetime.constantMax);
         Destroy(gameObject);
@@ -96,7 +128,7 @@ public class Enemy : MonoBehaviour
                 touchCooldown = true;
                 timer = 0;
                 collision.gameObject.GetComponent<Player>().GetHit(attack);
-                
+                moving = false;
             }
         }
     }
@@ -105,9 +137,12 @@ public class Enemy : MonoBehaviour
     {
         
         Vector2 dif = player.transform.position-transform.position;
+        atkFlash.Flash();
+
         yield return new WaitForSeconds(1f);
-        dif = dif.normalized * chargeSpeed;
-        rb.AddForce(dif, ForceMode2D.Impulse);
+        rb.velocity = Vector2.zero;
+        rb.AddForce(dif.normalized * chargeSpeed, ForceMode2D.Impulse);
+
         yield return new WaitForSeconds(0.75f);
         rb.velocity = Vector2.zero;
 
@@ -115,56 +150,90 @@ public class Enemy : MonoBehaviour
         
     }
 
-    private void FixedUpdate()
+    private IEnumerator ThrowBomb()
     {
-        if (Vector2.Distance(transform.position,player.transform.position) <= 4)
-        {
-            if (!chargeCD)
-            {
-                chargeCD = true;
-                moving = false;
-                StartCoroutine(Charge());
-            }
-            
-        }
-
-        if (moving)
-        {
-            float step = movementSpeed * Time.fixedDeltaTime;
-            Vector3 variance = new Vector3(xVariance,yVariance,0);   
-            transform.position = Vector2.MoveTowards(transform.position, player.transform.position+variance, step);
-            
-            if (gameObject.transform.position.x > player.transform.position.x)
-            {
-                transform.rotation = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                transform.rotation = Quaternion.Euler(0, 180, 0);
-            }
-        }
-
-        if (touchCooldown)
-        {
-            timer += Time.fixedDeltaTime;
-            if (timer >= timeLimit)
-            {
-                touchCooldown = false;
-                moving = true;
-                timer = 0;
-            }
-        }
-
-        if (chargeCD)
-        {
-            chargeTime += Time.fixedDeltaTime;
-            if (chargeTime >= chargeTimeLimit)
-            {
-                chargeCD = false;
-                chargeTime = 0;
-            }
-        }
-
+        yield return new WaitForSeconds(1f);
     }
 
+    private void FixedUpdate()
+    {
+        if (!dead)
+        {
+            if (isFish)
+            {
+                if (Vector2.Distance(transform.position, player.transform.position) <= 4 && moving)
+                {
+                    if (!chargeCD)
+                    {
+                        chargeCD = true;
+                        moving = false;
+                        StartCoroutine(Charge());
+                    }
+                }
+
+                if (chargeCD)
+                {
+                    chargeTime += Time.fixedDeltaTime;
+                    if (chargeTime >= chargeTimeLimit)
+                    {
+                        chargeCD = false;
+                        chargeTime = 0;
+                    }
+                }
+            }
+
+            if (isSand)
+            {
+                if (!bombCD)
+                {
+                    bombCD = true;
+                    StartCoroutine(ThrowBomb());
+                }
+                if (bombCD)
+                {
+                    bombTime += Time.fixedDeltaTime;
+                    if (bombTime >= bombTimeLimit)
+                    {
+                        bombCD = false;
+                        bombTime = 0;
+                    }
+                }
+            }
+
+            if (moving)
+            {
+                if (isSand && (Vector2.Distance(transform.position, player.transform.position) <= 7.5))
+                {
+
+                }
+                else
+                {
+                    float step = movementSpeed * Time.fixedDeltaTime;
+                    Vector3 variance = new Vector3(xVariance, yVariance, 0);
+                    transform.position = Vector2.MoveTowards(transform.position, player.transform.position + variance, step);
+
+                    if (gameObject.transform.position.x > player.transform.position.x)
+                    {
+                        transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else
+                    {
+                        transform.rotation = Quaternion.Euler(0, 180, 0);
+                    }
+                }
+            }
+
+            if (touchCooldown)
+            {
+                timer += Time.fixedDeltaTime;
+                if (timer >= timeLimit)
+                {
+                    touchCooldown = false;
+                    moving = true;
+                    timer = 0;
+                }
+            }
+
+        }
+    }
 }

@@ -334,6 +334,8 @@ MonoBehaviour:
   LevelUpBox: {fileID: 916105487}
   preDamagePopup: {fileID: 2416641826967610285, guid: 0ba0162d9ba13d04188fd70f51999ad6, type: 3}
   KillCounter: {fileID: 1763027326}
+  ppv: {fileID: 519420033}
+  vignette: {fileID: 0}
 --- !u!114 &80718368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1195,7 +1197,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.23949653, g: 0.8301887, b: 0.13053276, a: 0}
+  m_BackGroundColor: {r: 0.5157232, g: 0.5897662, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

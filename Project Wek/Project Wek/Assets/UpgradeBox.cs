@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class UpgradeBox : MonoBehaviour
 {
@@ -32,7 +35,7 @@ public class UpgradeBox : MonoBehaviour
             case 1:
                 icon.sprite = iceCube;
                 title.text = "Ice Cube";
-                description.text = "Increase DAMAGE";
+                description.text = "Increase DAMAGE by 3";
                 break;
             case 2:
                 icon.sprite = iceCube;
@@ -47,12 +50,12 @@ public class UpgradeBox : MonoBehaviour
             case 4:
                 icon.sprite = iceCube;
                 title.text = "Ice Cube";
-                description.text = "Increase SPEED";
+                description.text = "Increase rotation SPEED";
                 break;
             case 5:
                 icon.sprite = fish;
                 title.text = "Fish Shot";
-                description.text = "Increase DAMAGE";
+                description.text = "Increase DAMAGE by 3";
                 break;
             case 6:
                 icon.sprite = fish;
@@ -72,12 +75,20 @@ public class UpgradeBox : MonoBehaviour
             case 9:
                 icon.sprite = wek;
                 title.text = "Wek";
-                description.text = "Increase LIFESTEAL";
+                description.text = "Increase LIFESTEAL by 1";
                 break;
             case 10:
                 icon.sprite = wek;
                 title.text = "Wek";
-                description.text = "Increase MAXHEALTH";
+                description.text = "Increase MAXHEALTH by 25";
+                break;
+            case 11:
+                icon.sprite = wek;
+                title.text = "Wek";
+                description.text = "Increase TOTALDMG by x1.25";
+                break;
+            case 12:
+                
                 break;
 
 

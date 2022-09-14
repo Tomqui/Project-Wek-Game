@@ -86,7 +86,7 @@ public class Projectile : MonoBehaviour
 
             try{
                 Vector2 dif;
-                enemy.isKinematic = false;
+                //enemy.isKinematic = false;
                 if (Laser)
                 {
                     dif = enemy.transform.position - player.transform.position;
@@ -120,7 +120,6 @@ public class Projectile : MonoBehaviour
             if(enemy!= null)
             {
                 enemy.velocity = Vector2.zero;
-                enemy.isKinematic = true;
             }
             
         }

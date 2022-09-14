@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -41,6 +42,10 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject preDamagePopup;
     [SerializeField] TextMeshProUGUI KillCounter;
     int killCount;
+
+    [SerializeField] PostProcessVolume ppv;
+    [SerializeField] Vignette vignette;
+
     private void SetUp() {
         currentHP = 25;
         maxHP = 25;
@@ -53,6 +58,7 @@ public class Player : MonoBehaviour
         iceKB = 2;
         iceSpeed = 100;
         iceShield.rotateSpeed = iceSpeed;
+        updateIce();
 
         fishAttack = 3;
         fishKB = 1;
@@ -74,9 +80,17 @@ public class Player : MonoBehaviour
         expSlide.value = EXP;
 
         InvokeRepeating("Attack", attackCooldown, attackCooldown);
-
+        ppv.profile.TryGetSettings(out vignette);
+        ChangeScreen();
         LevelUp();
+       
+        
+    }
 
+    public void updateIce()
+    {
+        ice1.GetComponent<Projectile>().attack = (int)iceAttack;
+        ice1.GetComponent<Projectile>().thrust = (int)iceKB;
     }
 
     public void moreIce()
@@ -122,6 +136,7 @@ public class Player : MonoBehaviour
         GameObject dmgpop = Instantiate(preDamagePopup, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
         dmgpop.GetComponentInChildren<DamagePopup>().SetText(dmg);
         dmgpop.GetComponentInChildren<DamagePopup>().SetColor(Color.red);
+        ChangeScreen();
     }
 
     public void Heal(int hp)
@@ -140,7 +155,7 @@ public class Player : MonoBehaviour
         hpSlide.maxValue = maxHP;
         hpSlide.value = currentHP;
         hpText.text = "HP: " + currentHP + "/" + maxHP;
-
+        ChangeScreen();
         
     }
 
@@ -164,6 +179,8 @@ public class Player : MonoBehaviour
         Time.timeScale = 0;
         LevelUpBox.SetActive(true);
         LevelUpBox.GetComponent<UpgradeSelect>().LevelUp();
+        updateIce();
+        ChangeScreen();
     }
 
     public void Die()
@@ -171,6 +188,11 @@ public class Player : MonoBehaviour
         //Destroy(gameObject);
     }
 
+    public void ChangeScreen()
+    {
+        vignette.color.Override(new Color(Mathf.Clamp(1-((float)currentHP / (float)maxHP), 0, 1f), 0, 0,1f));
+        vignette.intensity.Override(Mathf.Clamp(0.7f-((float)currentHP)/(float)maxHP,0.3f,0.5f));
+    }
     void Attack()
     {
         float xPad = 0.5f;

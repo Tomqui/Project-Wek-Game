@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 3452475962845980533}
   - component: {fileID: 3452475962845980530}
   - component: {fileID: 3452475962845980521}
+  - component: {fileID: 2291139190784778120}
   - component: {fileID: 3452475962845980535}
   - component: {fileID: 3452475962845980534}
   m_Layer: 0
@@ -187,6 +188,12 @@ MonoBehaviour:
   movementSpeed: 1
   attack: 1
   shadow: {fileID: 3452475962631217092}
+  exp: 1
+  isFish: 1
+  isSand: 0
+  isYMDN: 0
+  hitFlash: {fileID: 3452475962845980521}
+  atkFlash: {fileID: 2291139190784778120}
 --- !u!114 &3452475962845980521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +208,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashMaterial: {fileID: 2100000, guid: 299fc3af52f1fda459c97576ea1dbd5c, type: 2}
   duration: 0.1
+--- !u!114 &2291139190784778120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3452475962845980531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 235de4f63cbf3dc49a8f8456620a6ec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: 0593f0d9099617345b83304acf127b0f, type: 2}
+  duration: 0.3
 --- !u!61 &3452475962845980535
 BoxCollider2D:
   m_ObjectHideFlags: 0
