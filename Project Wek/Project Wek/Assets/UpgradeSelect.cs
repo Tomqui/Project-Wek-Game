@@ -44,13 +44,11 @@ public class UpgradeSelect : MonoBehaviour
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);
-                Debug.Log("c1");
             }
             else if (num == c2)
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);
-                Debug.Log("c2");
             }
             else if (player.iceCount >= 4 && num == 2)
             {
@@ -69,13 +67,6 @@ public class UpgradeSelect : MonoBehaviour
         }
 
         return num;
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            LevelUp();
-        }
     }
 
 }

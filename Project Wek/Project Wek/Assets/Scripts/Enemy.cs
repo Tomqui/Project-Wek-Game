@@ -36,6 +36,7 @@ public class Enemy : MonoBehaviour
 
     //sand
     [SerializeField] bool isSand;
+    [SerializeField] GameObject bombPrefab;
     private bool bombCD;
     private float bombTime;
     private float bombTimeLimit;
@@ -57,6 +58,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] SimpleFlash hitFlash;
     [SerializeField] SimpleFlash atkFlash;
 
+    [SerializeField] AudioSource FishDashSound;
+    [SerializeField] AudioSource SandThrowSound;
 
     void Start()
     {
@@ -68,6 +71,10 @@ public class Enemy : MonoBehaviour
         chargeSpeed = 10f;
         chargeTime = 0f;
         chargeTimeLimit = 5f;
+
+        bombCD = false;
+        bombTime = 0f;
+        bombTimeLimit = 7.5f;
 
         player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody2D>();
@@ -83,6 +90,14 @@ public class Enemy : MonoBehaviour
         attack = atk;
         maxHP = hp;
         currentHP = hp;
+    }
+
+    public void SetUpSand(int atk,int hp, int bd)
+    {
+        attack = atk;
+        maxHP = hp;
+        currentHP = hp;
+        bombDMG = bd;
     }
 
     public void GetHit(int dmg)
@@ -140,6 +155,7 @@ public class Enemy : MonoBehaviour
         atkFlash.Flash();
 
         yield return new WaitForSeconds(1f);
+        FishDashSound.Play();
         rb.velocity = Vector2.zero;
         rb.AddForce(dif.normalized * chargeSpeed, ForceMode2D.Impulse);
 
@@ -152,6 +168,9 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator ThrowBomb()
     {
+        GameObject newBomb = Instantiate(bombPrefab,transform.position,Quaternion.identity);
+        newBomb.GetComponent<Bomb>().SetDmg(bombDMG);
+        SandThrowSound.Play();
         yield return new WaitForSeconds(1f);
     }
 
@@ -184,7 +203,7 @@ public class Enemy : MonoBehaviour
 
             if (isSand)
             {
-                if (!bombCD)
+                if (!bombCD && Vector2.Distance(transform.position, player.transform.position) <= 7.5)
                 {
                     bombCD = true;
                     StartCoroutine(ThrowBomb());
@@ -212,14 +231,29 @@ public class Enemy : MonoBehaviour
                     Vector3 variance = new Vector3(xVariance, yVariance, 0);
                     transform.position = Vector2.MoveTowards(transform.position, player.transform.position + variance, step);
 
-                    if (gameObject.transform.position.x > player.transform.position.x)
+                    if (isFish)
                     {
-                        transform.rotation = Quaternion.Euler(0, 0, 0);
+                        if (gameObject.transform.position.x > player.transform.position.x)
+                        {
+                            transform.rotation = Quaternion.Euler(0, 0, 0);
+                        }
+                        else
+                        {
+                            transform.rotation = Quaternion.Euler(0, 180, 0);
+                        }
                     }
                     else
                     {
-                        transform.rotation = Quaternion.Euler(0, 180, 0);
+                        if (gameObject.transform.position.x > player.transform.position.x)
+                        {
+                            transform.rotation = Quaternion.Euler(0, 180, 0);
+                        }
+                        else
+                        {
+                            transform.rotation = Quaternion.Euler(0, 0, 0);
+                        }
                     }
+                    
                 }
             }
 

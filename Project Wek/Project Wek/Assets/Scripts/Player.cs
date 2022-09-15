@@ -45,12 +45,16 @@ public class Player : MonoBehaviour
 
     [SerializeField] PostProcessVolume ppv;
     [SerializeField] Vignette vignette;
+    [SerializeField] GameObject gameOver;
+
+    [SerializeField] AudioSource shotSound;
+    [SerializeField] AudioSource hitSound;
 
     private void SetUp() {
         currentHP = 25;
         maxHP = 25;
         EXP = 0;
-        requiredEXP = 15;
+        requiredEXP = 5;
         killCount = 0;
 
         iceCount = 1;
@@ -82,7 +86,7 @@ public class Player : MonoBehaviour
         InvokeRepeating("Attack", attackCooldown, attackCooldown);
         ppv.profile.TryGetSettings(out vignette);
         ChangeScreen();
-        LevelUp();
+        
        
         
     }
@@ -133,10 +137,17 @@ public class Player : MonoBehaviour
         hpSlide.value = currentHP;
         hpText.text = "HP: " + currentHP + "/" + maxHP;
 
+        hitSound.Play();
         GameObject dmgpop = Instantiate(preDamagePopup, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
         dmgpop.GetComponentInChildren<DamagePopup>().SetText(dmg);
         dmgpop.GetComponentInChildren<DamagePopup>().SetColor(Color.red);
         ChangeScreen();
+
+        if(currentHP <= 0)
+        {
+            gameOver.SetActive(true);
+            Time.timeScale = 0;
+        }
     }
 
     public void Heal(int hp)
@@ -166,6 +177,7 @@ public class Player : MonoBehaviour
         {
             EXP = 0;
             LevelUp();
+            requiredEXP += 2;
         }
         expSlide.maxValue = requiredEXP;
         expSlide.value = EXP;
@@ -181,6 +193,7 @@ public class Player : MonoBehaviour
         LevelUpBox.GetComponent<UpgradeSelect>().LevelUp();
         updateIce();
         ChangeScreen();
+        
     }
 
     public void Die()
@@ -206,7 +219,7 @@ public class Player : MonoBehaviour
             projRotate = 0;
             
         }
-
+        shotSound.Play();
         GameObject fish = Instantiate(prefabAttack, new Vector3(transform.position.x+xPad,transform.position.y,transform.position.z), Quaternion.Euler(transform.rotation.x,projRotate,transform.rotation.z));
         fish.GetComponent<Projectile>().SetStats(fishAttack, 10f, fishKB);
     }

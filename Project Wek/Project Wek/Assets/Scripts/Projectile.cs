@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
 
     [SerializeField] bool isCube;
     [SerializeField] bool isFish;
-
+    [SerializeField] AudioSource hitSound;
     private void Start()
     {
         
@@ -95,7 +95,8 @@ public class Projectile : MonoBehaviour
                 {
                     dif = enemy.transform.position - player.transform.position;
                 }
-                
+
+                hitSound.Play();
                 dif = dif.normalized * thrust;
                 enemy.AddForce(dif,ForceMode2D.Impulse);
                 StartCoroutine(KnockCo(enemy));
