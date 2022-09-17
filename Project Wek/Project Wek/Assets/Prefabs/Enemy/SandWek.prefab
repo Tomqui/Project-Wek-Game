@@ -4979,6 +4979,8 @@ MonoBehaviour:
   atkFlash: {fileID: 4789918371618054790}
   FishDashSound: {fileID: 0}
   SandThrowSound: {fileID: 2920943832706961926}
+  atkBoost: {fileID: 335086571652385565, guid: e7e747137a45e6c4a88fb45e89083576, type: 3}
+  spdBoost: {fileID: 211845519022024529, guid: 184358f4e2609b74899773319229ab92, type: 3}
 --- !u!114 &8240284454251715175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5220,7 +5222,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: -2
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_FlipX: 0

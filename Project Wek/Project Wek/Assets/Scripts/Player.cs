@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public int fishAttack;
     public float fishKB;
     public float attackCooldown = 1f;
-    public float iceAttack;
+    public int iceAttack;
     public int iceCount;
     public float iceKB;
     public float iceSpeed;
@@ -28,10 +28,10 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerMovement playerMove;
 
     [SerializeField] RotateShield iceShield;
-    [SerializeField] GameObject ice1;
-    [SerializeField] GameObject ice2;
-    [SerializeField] GameObject ice3;
-    [SerializeField] GameObject ice4;
+    [SerializeField] private GameObject ice1;
+    [SerializeField] private GameObject ice2;
+    [SerializeField] private GameObject ice3;
+    [SerializeField] private GameObject ice4;
 
     [SerializeField] Slider hpSlide;
     [SerializeField] TextMeshProUGUI hpText;
@@ -50,26 +50,49 @@ public class Player : MonoBehaviour
     [SerializeField] AudioSource shotSound;
     [SerializeField] AudioSource hitSound;
 
+    Vector2 mousePos;
+    public float totalDMG;
+
+    bool isSpeedBoost;
+    float speedTime;
+    float speedTimeLimit;
+
+    bool isAttackBoost;
+    float attackTime;
+    float attackTimeLimit;
+
+    [SerializeField] Transform gunTip;
+
     private void SetUp() {
         currentHP = 25;
         maxHP = 25;
         EXP = 0;
-        requiredEXP = 5;
+        requiredEXP = 1;
         killCount = 0;
 
         iceCount = 1;
-        iceAttack = 1;
-        iceKB = 2;
+        iceAttack = 4;
+        iceKB = 4;
         iceSpeed = 100;
         iceShield.rotateSpeed = iceSpeed;
         updateIce();
 
         fishAttack = 3;
-        fishKB = 1;
-        attackCooldown = 1;
+        fishKB = 1.50f;
+        attackCooldown = 1.10f;
+        totalDMG = 1f;
 
         lifesteal = 0;
-        playerMove.moveSpeed = 2;
+        playerMove.moveSpeed = 1.75f;
+        level = 0;
+
+        isSpeedBoost = false;
+        speedTime = 0;
+        speedTimeLimit = 5f;
+
+        isAttackBoost = false;
+        attackTime = 0;
+        attackTimeLimit = 5;
     }
 
     private void Start()
@@ -83,18 +106,37 @@ public class Player : MonoBehaviour
         expSlide.maxValue = requiredEXP;
         expSlide.value = EXP;
 
+        ice1 = GameObject.Find("Rotating Shield");
+
         InvokeRepeating("Attack", attackCooldown, attackCooldown);
         ppv.profile.TryGetSettings(out vignette);
         ChangeScreen();
-        
-       
+
+        level = 0;
         
     }
 
     public void updateIce()
     {
-        ice1.GetComponent<Projectile>().attack = (int)iceAttack;
+        ice1.GetComponent<Projectile>().attack = (int)Mathf.Round(iceAttack*totalDMG);
         ice1.GetComponent<Projectile>().thrust = (int)iceKB;
+
+        ice2.GetComponent<Projectile>().attack = (int)Mathf.Round(iceAttack * totalDMG);
+        ice2.GetComponent<Projectile>().thrust = (int)iceKB;
+
+        ice3.GetComponent<Projectile>().attack = (int)Mathf.Round(iceAttack * totalDMG);
+        ice3.GetComponent<Projectile>().thrust = (int)iceKB;
+
+        ice4.GetComponent<Projectile>().attack = (int)Mathf.Round(iceAttack * totalDMG);
+        ice4.GetComponent<Projectile>().thrust = (int)iceKB;
+
+
+    }
+
+    public void changeAS()
+    {
+        CancelInvoke();
+        InvokeRepeating("Attack", attackCooldown, attackCooldown);
     }
 
     public void moreIce()
@@ -121,7 +163,7 @@ public class Player : MonoBehaviour
 
     public void moreMove()
     {
-        playerMove.IncreaseMove(0.5f);
+        playerMove.IncreaseMove(0.65f);
     }
 
     public void GetHit(int dmg)
@@ -177,11 +219,19 @@ public class Player : MonoBehaviour
         {
             EXP = 0;
             LevelUp();
-            requiredEXP += 2;
+            if(level <= 15)
+            {
+                requiredEXP += 1;
+            }
+            else
+            {
+                requiredEXP += 2;
+            }
+            
         }
         expSlide.maxValue = requiredEXP;
         expSlide.value = EXP;
-
+        level++;
         killCount++;
         KillCounter.text = killCount+"";
     }
@@ -192,8 +242,60 @@ public class Player : MonoBehaviour
         LevelUpBox.SetActive(true);
         LevelUpBox.GetComponent<UpgradeSelect>().LevelUp();
         updateIce();
+
+        playerMove.moveSpeed += 0.05f;
+        totalDMG += 0.035f;
+        maxHP += 1;
+        currentHP += 1;
+        Heal(5);
+
         ChangeScreen();
         
+    }
+
+    public void StartSpeedBoost()
+    {
+        speedTime = 0;
+        if (!isSpeedBoost)
+        {
+            playerMove.moveSpeed += 2f;
+        }
+        isSpeedBoost = true;
+    }
+
+    public void EndSpeedBoost()
+    {
+        isSpeedBoost = false;
+        playerMove.moveSpeed -= 2f;
+    }
+
+    public void StartAttackBoost()
+    {
+        attackTime = 0;
+        if (!isAttackBoost)
+        {
+            totalDMG += 1;
+        }
+        isAttackBoost = true;
+        updateIce();
+    }
+
+    public void EndAttackBoost()
+    {
+        isAttackBoost = false;
+        totalDMG -= 1;
+        updateIce();
+    }
+
+    private void Update()
+    {
+        /*
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            LevelUp();
+        }
+        */
+      
     }
 
     public void Die()
@@ -208,21 +310,35 @@ public class Player : MonoBehaviour
     }
     void Attack()
     {
-        float xPad = 0.5f;
-        float projRotate = 0;
-        if (transform.rotation.y%180==0){
-            projRotate = 180;
-            xPad *= -1;
-        }
-        else
-        {
-            projRotate = 0;
-            
-        }
+
         shotSound.Play();
-        GameObject fish = Instantiate(prefabAttack, new Vector3(transform.position.x+xPad,transform.position.y,transform.position.z), Quaternion.Euler(transform.rotation.x,projRotate,transform.rotation.z));
-        fish.GetComponent<Projectile>().SetStats(fishAttack, 10f, fishKB);
+
+        Vector3 mousePos = GameObject.Find("Main Camera").GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        Vector2 dir = (mousePos - transform.position).normalized;
+        //GameObject fish = Instantiate(prefabAttack, new Vector3(transform.position.x+(dir.x*1.4f),transform.position.y+(dir.y*1.4f),transform.position.z), Quaternion.identity);
+        GameObject fish = Instantiate(prefabAttack,gunTip.position, gunTip.rotation);
+        //(int)Mathf.Round((float)fishAttack*totalDMG)
     }
 
-    
+    private void FixedUpdate()
+    {
+        if (isSpeedBoost)
+        {
+            speedTime += Time.fixedDeltaTime;
+            if(speedTime > speedTimeLimit)
+            {
+                EndSpeedBoost();
+            }
+        }
+
+        if (isAttackBoost)
+        {
+            attackTime += Time.fixedDeltaTime;
+            if(attackTime > attackTimeLimit)
+            {
+                EndAttackBoost();
+            }
+        }
+    }
+
 }

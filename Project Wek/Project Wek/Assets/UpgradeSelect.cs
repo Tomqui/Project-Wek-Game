@@ -1,4 +1,3 @@
-using Packages.Rider.Editor.UnitTesting;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +34,7 @@ public class UpgradeSelect : MonoBehaviour
     private int GetChoice(int c1 = 0,int c2 = 0)
     {
         bool acceptable = false;
-        int upperRange = 11;
+        int upperRange = 12;
         int num = Random.Range(1,upperRange);
 
         while (!acceptable)
@@ -59,6 +58,12 @@ public class UpgradeSelect : MonoBehaviour
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);
+            }
+            else if(num ==3 || num == 6)
+            {
+                acceptable = false;
+                num = Random.Range(1, upperRange);
+                //knockback ones no longer
             }
             else
             {

@@ -27,13 +27,12 @@ public class Bomb : MonoBehaviour
  
     public void Start()
     {
-        timeLimit = 2f;
         hit = false;
         exploded = false;
         destroyed = false;
 
-        xVariance = Random.Range(-0.5f, 0.5f);
-        yVariance = Random.Range(-0.5f, 0.5f);
+        xVariance = Random.Range(-1.5f, 1.5f);
+        yVariance = Random.Range(-1.5f, 1.5f);
         player = GameObject.Find("Player").transform.position;
     }
 
@@ -61,7 +60,7 @@ public class Bomb : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, player + variance, step);
         }
 
-        if (Vector2.Distance(gameObject.transform.position,GameObject.Find("Player").transform.position) <=3)
+        if (Vector2.Distance(gameObject.transform.position,GameObject.Find("Player").transform.position) <=2.75)
         {
             if (!hit && exploded && !destroyed)
             {

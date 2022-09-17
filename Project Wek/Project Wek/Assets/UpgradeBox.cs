@@ -55,7 +55,7 @@ public class UpgradeBox : MonoBehaviour
             case 5:
                 icon.sprite = fish;
                 title.text = "Fish Shot";
-                description.text = "Increase DAMAGE by 3";
+                description.text = "Increase DAMAGE by 2";
                 break;
             case 6:
                 icon.sprite = fish;
@@ -65,7 +65,7 @@ public class UpgradeBox : MonoBehaviour
             case 7:
                 icon.sprite = fish;
                 title.text = "Fish Shot";
-                description.text = "Increase ATTACKSPEED";
+                description.text = "Increase ATTACKSPEED by 0.1s";
                 break;
             case 8:
                 icon.sprite = wek;
@@ -85,10 +85,12 @@ public class UpgradeBox : MonoBehaviour
             case 11:
                 icon.sprite = wek;
                 title.text = "Wek";
-                description.text = "Increase TOTALDMG by x1.25";
+                description.text = "Increase TOTALDMG by x1.2";
                 break;
             case 12:
-                
+                icon.sprite = wek;
+                title.text = "Wek";
+                description.text = "Nothing";
                 break;
 
 
@@ -101,24 +103,30 @@ public class UpgradeBox : MonoBehaviour
         switch (upgradeNum) { 
             case 1:
                 player.iceAttack += 3;
+                player.updateIce();
                 break;
             case 2:
                 player.moreIce();
                 break;
             case 3:
-                player.iceKB += 1;
+                player.iceKB += 3f;
                 break;
             case 4:
                 player.iceMove();
                 break;
             case 5:
-                player.fishAttack += 3;
+                player.fishAttack += 2;
                 break;
             case 6:
-                player.fishKB += 1;
+                player.fishKB += 2f;
                 break;
             case 7:
                 player.attackCooldown -= 0.1f;
+                if(player.attackCooldown <=0.1f)
+                {
+                    player.attackCooldown = 0.1f;
+                }
+                player.changeAS();
                 break;
             case 8:
                 player.moreMove();
@@ -130,6 +138,9 @@ public class UpgradeBox : MonoBehaviour
                 player.maxHP += 25;
                 player.currentHP += 25;
                 player.Heal(0);
+                break;
+            case 11:
+                player.totalDMG += 0.2f;
                 break;
         }
         LevelUpContainer.SetActive(false);

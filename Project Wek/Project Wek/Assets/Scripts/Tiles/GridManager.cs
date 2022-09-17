@@ -8,7 +8,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] public int width,height,wallPadding;
 
     [SerializeField] private GameObject tile1,tile2,tile3,tile4,tile5,wall1,wall2;
-
+    [SerializeField] private GameObject extra1,extra2,extra3,extra4,extra5,extra6;
     [SerializeField] private GameObject playerObject;
    
     void GenerateGrid()
@@ -36,6 +36,34 @@ public class GridManager : MonoBehaviour
                 int r = Random.Range(0, 4);
                 tile = tiles[r];
              
+                if(Random.Range(0, 75) == 1)
+                {
+                    GameObject extra = null;
+                    switch (Random.Range(0,6))
+                    {
+                        case (0):
+                            extra = extra1;
+                            break;
+                        case (1):
+                            extra = extra2;
+                            break;
+                        case (2):
+                            extra = extra3;
+                            break;
+                        case (3):
+                            extra = extra4;
+                            break;
+                        case (4):
+                            extra = extra5;
+                            break;
+                        case (5):
+                            extra = extra6;
+                            break;
+                    }
+                    var extraTile = Instantiate(extra, new Vector3(x+0.5f, y+0.5f, 5), Quaternion.identity, gameObject.transform);
+                    extraTile.name = $"Extra {x} {y}";
+                }
+
                 var spawnedTile = Instantiate(tile, new Vector3(x, y,5), Quaternion.identity,gameObject.transform);
                 spawnedTile.name = $"Tile {x} {y}";
             }

@@ -8,7 +8,7 @@ public class Projectile : MonoBehaviour
 
     public float timer = 0.0f;
     
-    const float expiry = 10.0f;
+    const float expiry = 1.0f;
 
     public float thrust = 1.0f;
     public float knockTime = 0.5f;
@@ -28,40 +28,55 @@ public class Projectile : MonoBehaviour
     [SerializeField] bool isCube;
     [SerializeField] bool isFish;
     [SerializeField] AudioSource hitSound;
+
+    Vector3 mousePos;
+
     private void Start()
     {
-        
         player = GameObject.Find("Player").GetComponent<Player>();
         rb = GetComponent<Rigidbody2D>();
-        if (transform.rotation.eulerAngles.y == 180) {    
-            direction = -1;
-        }
-        else{
-            direction = 1;
-        }
+        
         if (isFish)
         {
-            SetStats(player.fishAttack, 10f, player.fishKB);
+            SetStats((int)Mathf.Round(player.fishAttack*player.totalDMG), player.fishKB);
         }
         if (isCube)
         {
-            SetStats(player.iceCount, 0f, player.iceKB);
+            SetStats((int)Mathf.Round(player.iceAttack*player.totalDMG), player.iceKB);
+        }
+
+        
+        mousePos = GameObject.Find("Main Camera").GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        
+        Vector2 dir = mousePos-GameObject.Find("Player").transform.position;
+        if (moveSpeed > 0)
+        {
+            float angle = -1*(Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg - 90f);
+            rb.rotation = angle;
+
+            if (dir.x < 0)
+            {
+                transform.eulerAngles = new Vector3(180,0,-1*angle);
+                
+            }
+            
+            rb.velocity = new Vector2(dir.x, dir.y).normalized *(moveSpeed+GameObject.Find("Player").GetComponent<PlayerMovement>().moveSpeed);
         }
     }
 
-    public void SetStats(int dmg, float move, float kb)
+    public void SetStats(int dmg, float kb)
     {
         attack = dmg;
-        moveSpeed = move;
         thrust = kb;
     }
 
     private void FixedUpdate()
     {
+        /*
         if(moveSpeed > 0)
         {
             rb.MovePosition(rb.position + new Vector2(direction, 0) * moveSpeed * Time.fixedDeltaTime);
-        }
+        }*/
 
         if (expires)
         {

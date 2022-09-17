@@ -18,6 +18,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] AudioSource dash1;
     [SerializeField] AudioSource dash2;
 
+    Vector3 mousePos;
+    Vector2 dir;
+
+    [SerializeField] GameObject shotgun;
+
     void Start()
     {
         canDash = true;
@@ -30,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         if (gameObject.GetComponent<Player>().currentHP>0)
         {
             movement.x = Input.GetAxisRaw("Horizontal");
@@ -49,8 +55,9 @@ public class PlayerMovement : MonoBehaviour
                 StartCoroutine(Dash());
             }
         }
-        
 
+        mousePos = GameObject.Find("Main Camera").GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        dir = (mousePos - transform.position).normalized;
     }
 
     
@@ -58,16 +65,28 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isDash)
         {
-            if (movement.x < 0)
+            if (dir.x < 0)
             {
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
-            else if (movement.x > 0)
+            else if (dir.x > 0)
             {
                 transform.rotation = Quaternion.Euler(0, 180, 0);
             }
             rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-        } 
+        }
+
+        float angle = (Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg - 90f);
+        
+        if (dir.x > 0)
+        {
+            shotgun.transform.rotation = Quaternion.Euler(0, 0, -angle);
+        }
+        else
+        {
+            shotgun.transform.rotation = Quaternion.Euler(180, 0, angle);
+        }
+        
     }
 
     private IEnumerator Dash()
@@ -77,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
         haste.color = Color.gray;
 
-        rb.velocity = new Vector2(movement.x, movement.y).normalized * 10;
+        rb.velocity = new Vector2(movement.x, movement.y).normalized * (10+moveSpeed);
         tr.emitting = true;
         if (Random.Range(1,3)==1)
         {
