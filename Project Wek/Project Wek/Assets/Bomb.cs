@@ -55,7 +55,7 @@ public class Bomb : MonoBehaviour
 
         if (!detonating)
         {
-            float step = 10 * Time.fixedDeltaTime;
+            float step = (10+(-Mathf.Log10(timeLimit)*30)) * Time.fixedDeltaTime;
             Vector2 variance = new Vector3(xVariance, yVariance);
             transform.position = Vector2.MoveTowards(transform.position, player + variance, step);
         }

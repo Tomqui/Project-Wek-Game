@@ -169,9 +169,6 @@ public class Enemy : MonoBehaviour
         if (!dead)
         {
             
-
-            
-
             //touch damage
             if (collision.gameObject.CompareTag("Player"))
             {
