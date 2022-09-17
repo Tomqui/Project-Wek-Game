@@ -8,7 +8,6 @@ public class RotateShield : MonoBehaviour
     public Projectile p1;
     public Projectile p2;
     public Projectile p3;
-    public Projectile p4;
 
 
     GameObject player;
@@ -41,10 +40,11 @@ public class RotateShield : MonoBehaviour
             p1.transform.eulerAngles.x,
             p1.transform.eulerAngles.y,
             -gameObject.transform.rotation.z);
+        /*
         p4.transform.eulerAngles = new Vector3(
             p1.transform.eulerAngles.x,
             p1.transform.eulerAngles.y,
-            -gameObject.transform.rotation.z);
+            -gameObject.transform.rotation.z);*/
     }
 
 }

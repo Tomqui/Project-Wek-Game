@@ -65,7 +65,7 @@ public class UpgradeBox : MonoBehaviour
             case 7:
                 icon.sprite = fish;
                 title.text = "Fish Shot";
-                description.text = "Increase ATTACKSPEED by 0.15s";
+                description.text = "Increase ATTACKSPEED by 0.1s";
                 break;
             case 8:
                 icon.sprite = wek;
@@ -121,7 +121,7 @@ public class UpgradeBox : MonoBehaviour
                 player.fishKB += 2f;
                 break;
             case 7:
-                player.attackCooldown -= 0.15f;
+                player.attackCooldown -= 0.1f;
                 if(player.attackCooldown <=0.1f)
                 {
                     player.attackCooldown = 0.1f;

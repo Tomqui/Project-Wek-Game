@@ -60,7 +60,7 @@ public class EnemySystem : MonoBehaviour
         totalTimer += Time.fixedDeltaTime;
         fishTimer += Time.fixedDeltaTime;
 
-        float fishRespawn = Mathf.Clamp(7.5f-totalTimer/30,0.5f,10);
+        float fishRespawn = Mathf.Clamp(7.5f-totalTimer/35,0.5f,10);
         int fishDmgRamp = 2 + (int)(totalTimer/19);
         int fishHpRamp = 10 + (int)(totalTimer/18);
         float fishMoveRamp = 0.75f + (totalTimer / 200);
@@ -68,12 +68,12 @@ public class EnemySystem : MonoBehaviour
         float fishRangeRamp = 4 + Mathf.Clamp((totalTimer/150), 0,2.5f);
 
         sandTimer += Time.fixedDeltaTime;
-        float sandRespawn = Mathf.Clamp(10f - totalTimer / 30, 0.7f, 10);
+        float sandRespawn = Mathf.Clamp(10f - totalTimer / 40, 0.7f, 10);
         int sandTouchRamp = 1+ (int)(totalTimer / 75);
         int sandHpRamp = 7+ (int)(totalTimer / 25);
         int sandBombRamp = 4 + (int)(totalTimer / 15);
         float sandMoveRamp = 0.4f + (totalTimer / 250);
-        float sandDetonateRamp = Mathf.Clamp(1.5f-(totalTimer/60),0.25f,10);
+        float sandDetonateRamp = Mathf.Clamp(2.0f-(totalTimer/200),0.25f,10);
 
         //first minute
         if(totalTimer <= 10)

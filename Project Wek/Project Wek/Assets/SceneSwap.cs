@@ -14,10 +14,16 @@ public class SceneSwap : MonoBehaviour
 
     public IEnumerator Fade()
     {
-        Time.timeScale = 1.0f;
+        Time.timeScale = 1f;
         fade.SetActive(true);
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Main",LoadSceneMode.Single);
         
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
 }

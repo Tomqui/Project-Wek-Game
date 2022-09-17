@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] PlayfabManager pm;
+
     public int currentHP = 100;
     public int maxHP = 100;
 
@@ -31,7 +33,6 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject ice1;
     [SerializeField] private GameObject ice2;
     [SerializeField] private GameObject ice3;
-    [SerializeField] private GameObject ice4;
 
     [SerializeField] Slider hpSlide;
     [SerializeField] TextMeshProUGUI hpText;
@@ -71,15 +72,15 @@ public class Player : MonoBehaviour
         killCount = 0;
 
         iceCount = 1;
-        iceAttack = 4;
+        iceAttack = 5;
         iceKB = 4;
-        iceSpeed = 100;
+        iceSpeed = 150;
         iceShield.rotateSpeed = iceSpeed;
         updateIce();
 
         fishAttack = 3;
         fishKB = 1.50f;
-        attackCooldown = 1.10f;
+        attackCooldown = 1.20f;
         totalDMG = 1f;
 
         lifesteal = 0;
@@ -127,10 +128,6 @@ public class Player : MonoBehaviour
         ice3.GetComponent<Projectile>().attack = (int)Mathf.Round(iceAttack * totalDMG);
         ice3.GetComponent<Projectile>().thrust = (int)iceKB;
 
-        ice4.GetComponent<Projectile>().attack = (int)Mathf.Round(iceAttack * totalDMG);
-        ice4.GetComponent<Projectile>().thrust = (int)iceKB;
-
-
     }
 
     public void changeAS()
@@ -149,9 +146,6 @@ public class Player : MonoBehaviour
         else if(iceCount == 3)
         {
             ice3.SetActive(true);
-        }
-        else if(iceCount == 4){
-            ice4.SetActive(true);
         }
     }
 
@@ -187,9 +181,16 @@ public class Player : MonoBehaviour
 
         if(currentHP <= 0)
         {
-            gameOver.SetActive(true);
-            Time.timeScale = 0;
+            EndGame();
         }
+    }
+
+    public void EndGame()
+    {
+        gameOver.SetActive(true);
+        pm.GetLeaderboard();
+        pm.SendLeaderboard(killCount);
+        Time.timeScale = 0;
     }
 
     public void Heal(int hp)

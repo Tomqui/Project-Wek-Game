@@ -49,12 +49,12 @@ public class UpgradeSelect : MonoBehaviour
                 acceptable = false;
                 num = Random.Range(1, upperRange);
             }
-            else if (player.iceCount >= 4 && num == 2)
+            else if (player.iceCount >= 3 && num == 2)
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);
             }
-            else if(player.attackCooldown <= 0.1 && num == 7)
+            else if(player.attackCooldown <= 0.1f && num == 7)
             {
                 acceptable = false;
                 num = Random.Range(1, upperRange);
