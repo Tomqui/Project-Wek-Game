@@ -21,7 +21,9 @@ public class UpgradeBox : MonoBehaviour
     [SerializeField] private Sprite iceCube;
     [SerializeField] private Sprite fish;
     [SerializeField] private Sprite wek;
-
+    [SerializeField] private Sprite heart;
+    [SerializeField] private Sprite haste;
+    [SerializeField] private Sprite rage;
 
     private void Start()
     {
@@ -35,7 +37,7 @@ public class UpgradeBox : MonoBehaviour
             case 1:
                 icon.sprite = iceCube;
                 title.text = "Ice Cube";
-                description.text = "Increase DAMAGE by 3";
+                description.text = "Increase DAMAGE by 2";
                 break;
             case 2:
                 icon.sprite = iceCube;
@@ -65,10 +67,10 @@ public class UpgradeBox : MonoBehaviour
             case 7:
                 icon.sprite = fish;
                 title.text = "Fish Shot";
-                description.text = "Increase ATTACKSPEED by 0.1s";
+                description.text = "Increase ATTACKSPEED by 0.12s";
                 break;
             case 8:
-                icon.sprite = wek;
+                icon.sprite = haste;
                 title.text = "Wek";
                 description.text = "Increase MOVESPEED";
                 break;
@@ -78,12 +80,12 @@ public class UpgradeBox : MonoBehaviour
                 description.text = "Increase LIFESTEAL by 1";
                 break;
             case 10:
-                icon.sprite = wek;
+                icon.sprite = heart;
                 title.text = "Wek";
-                description.text = "Increase MAXHEALTH by 25";
+                description.text = "Increase MAXHEALTH by 30";
                 break;
             case 11:
-                icon.sprite = wek;
+                icon.sprite = rage;
                 title.text = "Wek";
                 description.text = "Increase TOTALDMG by x1.2";
                 break;
@@ -102,7 +104,7 @@ public class UpgradeBox : MonoBehaviour
     {
         switch (upgradeNum) { 
             case 1:
-                player.iceAttack += 3;
+                player.iceAttack += 2;
                 player.updateIce();
                 break;
             case 2:
@@ -121,10 +123,10 @@ public class UpgradeBox : MonoBehaviour
                 player.fishKB += 2f;
                 break;
             case 7:
-                player.attackCooldown -= 0.1f;
-                if(player.attackCooldown <=0.1f)
+                player.attackCooldown -= 0.12f;
+                if(player.attackCooldown <=0.15f)
                 {
-                    player.attackCooldown = 0.1f;
+                    player.attackCooldown = 0.15f;
                 }
                 player.changeAS();
                 break;
@@ -135,12 +137,12 @@ public class UpgradeBox : MonoBehaviour
                 player.lifesteal++;
                 break;
             case 10:
-                player.maxHP += 25;
-                player.currentHP += 25;
-                player.Heal(0);
+                player.maxHP += 30;
+                player.Heal(30);
                 break;
             case 11:
                 player.totalDMG += 0.2f;
+                player.updateIce();
                 break;
         }
         LevelUpContainer.SetActive(false);

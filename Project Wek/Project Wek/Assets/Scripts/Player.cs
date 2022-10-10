@@ -63,6 +63,10 @@ public class Player : MonoBehaviour
     float attackTimeLimit;
 
     [SerializeField] Transform gunTip;
+    [SerializeField] GameObject pauseMenu;
+    [SerializeField] AudioListener audio;
+
+    bool gotScore;
 
     private void SetUp() {
         currentHP = 25;
@@ -74,13 +78,13 @@ public class Player : MonoBehaviour
         iceCount = 1;
         iceAttack = 5;
         iceKB = 4;
-        iceSpeed = 150;
+        iceSpeed = 100;
         iceShield.rotateSpeed = iceSpeed;
         updateIce();
 
         fishAttack = 3;
-        fishKB = 1.50f;
-        attackCooldown = 1.20f;
+        fishKB = 2.0f;
+        attackCooldown = 1.1f;
         totalDMG = 1f;
 
         lifesteal = 0;
@@ -94,6 +98,7 @@ public class Player : MonoBehaviour
         isAttackBoost = false;
         attackTime = 0;
         attackTimeLimit = 5;
+
     }
 
     private void Start()
@@ -114,7 +119,7 @@ public class Player : MonoBehaviour
         ChangeScreen();
 
         level = 0;
-        
+        gotScore = false;
     }
 
     public void updateIce()
@@ -151,8 +156,8 @@ public class Player : MonoBehaviour
 
     public void iceMove()
     {
-        iceSpeed += 50;
-        iceShield.rotateSpeed += 50;
+        iceSpeed += 70;
+        iceShield.rotateSpeed += 70;
     }
 
     public void moreMove()
@@ -187,25 +192,44 @@ public class Player : MonoBehaviour
 
     public void EndGame()
     {
+
         gameOver.SetActive(true);
-        pm.GetLeaderboard();
-        pm.SendLeaderboard(killCount);
-        Time.timeScale = 0;
+        if (!gotScore)
+        {
+            pm.GetLeaderboard();
+            gotScore = true;
+            if (killCount > GameObject.Find("Enemies").GetComponent<EnemySystem>().totalCount)
+            {
+                pm.SendLeaderboardTwo(killCount);
+            }
+            pm.SendLeaderboard(killCount);
+
+            Time.timeScale = 0;
+        }
+
     }
 
     public void Heal(int hp)
     {
-        if(currentHP + hp > maxHP || hp == 0)
+        if(hp == 0)
         {
-        
+
         }
         else
         {
-            currentHP += hp;
+            if (currentHP + hp > maxHP)
+            {
+                currentHP = maxHP;
+            }
+            else
+            {
+                currentHP += hp;
+            }
             GameObject dmgpop = Instantiate(preDamagePopup, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
             dmgpop.GetComponentInChildren<DamagePopup>().SetText(hp);
             dmgpop.GetComponentInChildren<DamagePopup>().SetColor(Color.green);
         }
+        
         hpSlide.maxValue = maxHP;
         hpSlide.value = currentHP;
         hpText.text = "HP: " + currentHP + "/" + maxHP;
@@ -220,19 +244,52 @@ public class Player : MonoBehaviour
         {
             EXP = 0;
             LevelUp();
-            if(level <= 15)
+            if (level <= 20)
             {
                 requiredEXP += 1;
             }
-            else
+            else if(level <= 25)
             {
                 requiredEXP += 2;
             }
-            
+            else if(level <= 30)
+            {
+                requiredEXP += 3;
+            }
+            else if(level <= 25)
+            {
+                requiredEXP += 4;
+            }
+            else if(level <= 30)
+            {
+                requiredEXP += 5;
+            }
+            else if(level < 35)
+            {
+                requiredEXP += 10;
+            }
+            else if (level < 40)
+            {
+                requiredEXP += 25;
+            }
+            else if (level < 50)
+            {
+                requiredEXP += 50;
+            }
+            else if(level < 60)
+            {
+                requiredEXP += 75;
+            }
+            else
+            {
+                requiredEXP += 100;
+            }
+
+
         }
         expSlide.maxValue = requiredEXP;
         expSlide.value = EXP;
-        level++;
+        
         killCount++;
         KillCounter.text = killCount+"";
     }
@@ -246,8 +303,9 @@ public class Player : MonoBehaviour
 
         playerMove.moveSpeed += 0.05f;
         totalDMG += 0.035f;
-        maxHP += 1;
-        currentHP += 1;
+        maxHP += 2;
+        currentHP += 2;
+        level++;
         Heal(5);
 
         ChangeScreen();
@@ -290,13 +348,31 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        /*
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            LevelUp();
+            if(Time.timeScale > 0)
+            {
+                Pause();
+            }
         }
-        */
+        
       
+    }
+
+    public void Pause()
+    {
+        pauseMenu.SetActive(true);
+        AudioListener.pause = true;
+        Time.timeScale = 0;
+    }
+
+    public void UnPause()
+    {
+        pauseMenu.SetActive(true);
+        AudioListener.pause = false;
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false); 
     }
 
     public void Die()

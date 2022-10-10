@@ -31,8 +31,8 @@ public class Bomb : MonoBehaviour
         exploded = false;
         destroyed = false;
 
-        xVariance = Random.Range(-1.5f, 1.5f);
-        yVariance = Random.Range(-1.5f, 1.5f);
+        xVariance = Random.Range(-3f, 3f);
+        yVariance = Random.Range(-3f, 3f);
         player = GameObject.Find("Player").transform.position;
     }
 

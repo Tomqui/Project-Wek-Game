@@ -45,11 +45,14 @@ public class Enemy : MonoBehaviour
     private float bombDetonate;
 
     //laser
-    [SerializeField] bool isYMDN;
+    [SerializeField] bool isHand;
     private bool laserCD;
     private float laserTime;
-    private float lasterTimeLimit;
+    private float laserTimeLimit;
     private int laserDMG;
+    private float laserT1;
+    private float laserT2;
+    [SerializeField] GameObject laserPrefab;
 
     public bool dead;
 
@@ -70,6 +73,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject spdBoost;
 
     [SerializeField] TrailRenderer tr;
+
+
+
     void Start()
     {
         moving = true;
@@ -83,6 +89,10 @@ public class Enemy : MonoBehaviour
         bombCD = false;
         bombTime = 0f;
         bombTimeLimit = 7.5f;
+
+        laserCD = false;
+        laserTime = 0f;
+        laserTimeLimit = 20f;
 
         resetTime = 0;
         resetTimeLimit = 10;
@@ -115,6 +125,19 @@ public class Enemy : MonoBehaviour
         movementSpeed = move;
         bombDetonate = detonate;
     }
+
+    public void SetUpHand(int atk, int hp, float move, int ld, float t1, float t2)
+    {
+        attack = atk;
+        maxHP = hp;
+        currentHP = hp;
+        movementSpeed = move;
+        laserDMG = ld;
+        laserT1 = t1;
+        laserT2 = t2;
+        
+    }
+
 
     public void GetHit(int dmg)
     {
@@ -212,6 +235,15 @@ public class Enemy : MonoBehaviour
         moving = true;
     }
 
+    private IEnumerator ShootLaser()
+    {
+        moving = false;
+        GameObject newLaser = Instantiate(laserPrefab, transform.position, Quaternion.identity);
+        newLaser.GetComponentInChildren<Laser>().SetUp(laserDMG, laserT1, laserT2);
+        yield return new WaitForSeconds(4f);
+        moving = true;
+    }
+
     private void FixedUpdate()
     {
         if (dead)
@@ -230,6 +262,7 @@ public class Enemy : MonoBehaviour
                 if (Vector2.Distance(transform.position, player.transform.position) >= 75)
                 {
                     Destroy(gameObject);
+                    GameObject.Find("Enemies").GetComponent<EnemySystem>().enemyCount--;
                 }
 
             }
@@ -272,6 +305,24 @@ public class Enemy : MonoBehaviour
                     {
                         bombCD = false;
                         bombTime = 0;
+                    }
+                }
+            }
+
+            if (isHand)
+            {
+                if (!laserCD && Vector2.Distance(transform.position, player.transform.position) <= 30)
+                {
+                    laserCD = true;
+                    StartCoroutine(ShootLaser());
+                }
+                if (laserCD)
+                {
+                    laserTime += Time.fixedDeltaTime;
+                    if (laserTime >= laserTimeLimit)
+                    {
+                        laserCD = false;
+                        laserTime = 0;
                     }
                 }
             }
